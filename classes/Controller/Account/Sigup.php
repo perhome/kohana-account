@@ -3,10 +3,10 @@
 abstract class Controller_Account_Sigup extends Controller_Account_Template {
   
   protected $redirect = '/';
+  protected $cache = 'sigup';
 
   public function before()
   {
-    $this->asip = $this->template.'_sigup_'. Request::$client_ip;
     parent::before();
   }
 

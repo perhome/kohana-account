@@ -3,10 +3,11 @@
 class Controller_Account_Sigin extends Controller_Account_Template {
 
   protected $redirect = '/';
+  protected $cache = 'sigin';
+
 
   public function before()
   {
-    $this->asip = $this->template.'_sigin_'. Request::$client_ip;
     parent::before();
     if ($this->model_account->check_login(true)) {
       $this->redirect($this->redirect);

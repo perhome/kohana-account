@@ -3,10 +3,12 @@
 abstract class Controller_Account_Template extends Controller {
 
   protected $redirect;
+  protected $cache;
 
   public $tpl_dir;
   public $name = 'default';
   public $template = 'account';
+
   public $auto_render = TRUE;
 
   protected $asip;
@@ -16,7 +18,8 @@ abstract class Controller_Account_Template extends Controller {
   public function before()
   {
     parent::before();
-
+    
+    $this->asip = $this->get_cache_id();
     $this->asip_count = Cache::instance()->get($this->asip, 0);
     $this->model_account = Model_Account::instance();
     if ($this->auto_render === TRUE)
@@ -32,6 +35,13 @@ abstract class Controller_Account_Template extends Controller {
     $url = urldecode($url);
     $this->redirect($url);
   }
+
+  public function get_cache_id()
+  {
+    $class = 'cache_asip_'.$this->cache.Request::$client_ip;
+    return $class;
+  }
+
   /**
    * Assigns the template [View] as the request response.
    */

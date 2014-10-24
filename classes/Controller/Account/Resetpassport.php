@@ -2,9 +2,11 @@
 
 abstract class Controller_Account_Resetpassport extends Controller_Account_Template {
 
+  protected $redirect = '/';
+  protected $cache = 'reset';
+
   public function before()
   {
-    $this->asip = $this->template.'_reset_'. Request::$client_ip;
     parent::before();
   }
 
