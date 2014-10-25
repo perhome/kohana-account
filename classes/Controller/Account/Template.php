@@ -3,7 +3,7 @@
 abstract class Controller_Account_Template extends Controller {
 
   protected $redirect;
-  protected $cache;
+  protected $has_captcha = false;
 
   public $tpl_dir;
   public $name = 'default';
@@ -13,7 +13,7 @@ abstract class Controller_Account_Template extends Controller {
 
   protected $asip;
   protected $asip_count;
-  protected $asip_count_max = 6;
+  protected $asip_count_max = 3;
 
   public function before()
   {
@@ -22,11 +22,15 @@ abstract class Controller_Account_Template extends Controller {
     $this->asip = $this->get_cache_id();
     $this->asip_count = Cache::instance()->get($this->asip, 0);
     $this->model_account = Model_Account::instance();
+    if ($this->asip_count > $this->asip_count_max) {
+      $this->has_captcha = TRUE;
+    }
     if ($this->auto_render === TRUE)
     {
       // Load the template
       $this->tpl_dir = $this->template.DIRECTORY_SEPARATOR.$this->name.DIRECTORY_SEPARATOR;
       $this->template = View::factory($this->tpl_dir.'template');
+      $this->template->set_global('has_captcha', $this->has_captcha);
     }
   }
 
@@ -38,8 +42,9 @@ abstract class Controller_Account_Template extends Controller {
 
   public function get_cache_id()
   {
-    $class = 'cache_asip_'.$this->cache.Request::$client_ip;
-    return $class;
+    $class = get_called_class();
+    $cache = 'cache_asip_'.$class.Request::$client_ip;
+    return $cache;
   }
 
   /**

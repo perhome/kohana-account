@@ -27,6 +27,7 @@
         <?php echo Form::password('repassword', Arr::get($_POST, 'repassword'), array('id'=>'repassword', 'placeholder'=>'确认密码')); ?>
         <?php if(isset($error['repassword'])): ?><span class="info-error"><?php echo $error['repassword'];  ?></span><?php endif; ?>
       </div>
+      <?php if($has_captcha): ?>
       <div class="pure-control-group">
         <label for="password">验证码</label>
         <?php echo Form::input('captcha', '', array('id'=>'captcha', 'placeholder'=>'请输入验证码')); ?>
@@ -36,6 +37,7 @@
         <label> </label>
         <?php echo Captcha::instance('default')->html_render(); ?>
       </div>
+      <?php endif; ?>
       <div class="pure-controls">
         <label for="cb" class="pure-checkbox">
         <input id="cb" type="checkbox" name="agree"> 同意并遵守  用户协议 <?php echo HTML::anchor('', '?'); ?>

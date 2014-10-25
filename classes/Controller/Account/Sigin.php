@@ -3,7 +3,6 @@
 class Controller_Account_Sigin extends Controller_Account_Template {
 
   protected $redirect = '/';
-  protected $cache = 'sigin';
 
 
   public function before()
@@ -17,12 +16,9 @@ class Controller_Account_Sigin extends Controller_Account_Template {
   public function action_index()
   {
     $has_captcha = FALSE;
-    if ($this->asip_count > $this->asip_count_max) {
-      $has_captcha = TRUE;
-    }
     $redirect = urlencode(Arr::get($_GET, 'redirect', $this->redirect));
     $view = View::factory($this->tpl_dir.'sigin')
-      ->set('has_captcha', $has_captcha)
+      ->set('has_captcha', $this->has_captcha)
       ->set('redirect', $redirect);
     $this->template->content = $view;
   }
@@ -47,7 +43,7 @@ class Controller_Account_Sigin extends Controller_Account_Template {
         ->rules('redirect', array());
 
     // captcha
-    if ($this->asip_count > $this->asip_count_max) {
+    if ($this->has_captcha) {
       $post->rules('captcha', array(
           array('not_empty'),
           array('Captcha::valid', array(':value')),

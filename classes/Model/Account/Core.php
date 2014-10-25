@@ -28,6 +28,7 @@ class Model_Account_Core extends Model {
   public function save($data) {}
   public function update($uid, $passport) {}
   public function update_password($uid, $password) {}
+  public function reset_password($email) {}
   public function delete($uid) {}
   public function actived($uid, $actived = null) {}
 

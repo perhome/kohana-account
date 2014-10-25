@@ -4,6 +4,7 @@ class Model_Account_Driver_Nosql extends Model_Account_Core {
 
   public $key_user = 'account:user';
   public $key_user_index = 'account:user:index';
+  public $key_user_reset = 'account:user:reset:';
   public $key_user_map_by_email = 'account:user:email';
   public $key_user_map_by_name = 'account:user:name';
   public $key_user_sort_by_created = 'account:user:list:created';
@@ -20,7 +21,7 @@ class Model_Account_Driver_Nosql extends Model_Account_Core {
 
   public function get_one_by_email($email) 
   {
-    $user = kv::instance()->hget($this->key_user_map_by_email, $email);
+    $user = Kv::instance()->hget($this->key_user_map_by_email, $email);
     if ($user) {
       return json_decode($user, true);
     }
@@ -106,6 +107,40 @@ class Model_Account_Driver_Nosql extends Model_Account_Core {
       return $ret?:false;
     }
     return false;
+  }
+
+  public function reset_passport($email) 
+  {
+    $user = $this->get_one_by_email($email);
+    if ($user) {
+      $random = Text::random(NULL, 30);
+      $html = <<<EOT
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+　<head>
+　　<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+　　<title>普华网账户重置</title>
+　　<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+　</head>
+  <body>
+  请点击下面链接，按照提示进行账户密码重置。
+  <a href="http://account.puhua.co/resetpassport?key=$random">点击这里 http://account.puhua.co/resetpassport?key=$random</a>
+  </body>
+</html>
+EOT;
+      $headers = "MIME-Version: 1.0" . "\r\n";
+      $headers .= "Content-Type: Multipart/Alternative" . "\r\n";
+      $headers .= "Content-type:text/html;charset=utf-8" . "\r\n";
+      $headers .= 'From: <service@puhua.co>' . "\r\n";
+      if (mail($email, '普华网账户重置', $html, $headers)) {
+        Kv::instance()->setx($random, $email, 3600*24);
+        return true;
+      }
+      else {
+        return '邮件系统故障！';
+      }
+    }
+    return '账户不存在';
   }
 
   public function delete($uid) 
