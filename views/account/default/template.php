@@ -1,11 +1,10 @@
 <?php defined('SYSPATH') or die('No direct script access.');?><!DOCTYPE html>
 <head>
-    <meta charset="utf-8"/>
-    <title>账户</title>
-    <link rel="shortcut icon" href="/media/favicon.ico?ver=0.1" /> 
-    <?php echo HTML::script('media/jquery-2.0.2.min.js'); ?>
-    <?php echo HTML::style('media/pure-min.css'); ?>
-    <?php echo HTML::style('media/awesome/css/font-awesome.min.css'); ?>
+  <meta charset="utf-8"/>
+  <title>账户</title>
+  <link rel="shortcut icon" href="/media/favicon.ico?ver=0.1" /> 
+  <?php echo HTML::style(STATIC_HOME_URL.'/media/pure/pure-min.css'); ?>
+  <?php echo HTML::style(STATIC_HOME_URL.'/awesome/css/font-awesome.min.css'); ?>
 </head>
 <body>
 <div class="pure-g" style="width: 960px; margin: 0 auto;">
